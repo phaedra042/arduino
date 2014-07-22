@@ -26,9 +26,33 @@
 
   PN532_I2C pn532i2c(Wire);
   PN532 nfc(pn532i2c);
+// console messages
+int debug=true;
+// led status globals
+int statusled = 0;
+int redledpin = 9;
+int greenledpin = 10;
+int blueledpin = 11;
 
 
-void setup(void) {
+
+void setup(){
+setup_ledstatus();  
+setup_rfid();
+
+  
+}
+
+void setup_ledstatus(){
+pinMode (redledpin,OUTPUT);
+pinMode(greenledpin,OUTPUT);
+pinMode(blueledpin,OUTPUT);       
+
+  
+}
+
+
+void setup_rfid (void) {
   Serial.begin(9600);
   Serial.println("Hello!");
 
@@ -51,7 +75,13 @@ void setup(void) {
 }
 
 
-void loop(void) {
+
+void display_status (int status){
+    
+}
+
+
+void read_rfid(void) {
   uint8_t success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
@@ -142,5 +172,8 @@ void loop(void) {
       }
     }
   }
+}
+
+void loop (){
 }
 
