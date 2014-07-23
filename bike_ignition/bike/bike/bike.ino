@@ -28,7 +28,10 @@
   PN532 nfc(pn532i2c);
 // console messages
 int debug=true;
+// do we have an authenticated card
 int authenticated = false;
+// what state do we think the bike is in
+int running = false;
 // led status globals
 int statusled = 0;
 //analogue output pins
@@ -203,7 +206,18 @@ void loop (){
 
 //if not running loop on reading a card
 
-//card read - authenticate data  
+//card read - 
+//{
+  display_status(status_reader_unauthenticated);
+  //authenticate card
+  display_status(status_reader_authenticated);
+  //if authenticated toggle bike relay on
+//}
+
+//check primary switch.
+//if off toggle bike relay off
+    //power down arduino
+
 
   
   
