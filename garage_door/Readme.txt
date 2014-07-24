@@ -31,7 +31,7 @@ while door open and timer>0
         	if counter = 10 then increase timer by 100(real numbers later) and  beep
             if timer= 10 then beep
            } 
-if timer = 0 toggle door switch else noop #does toggle door switch mean "operate door motor"? yep
+if timer = 0 operate door motor else noop
 }
 
 known state closed{
@@ -40,7 +40,7 @@ while door closed
 {
 check state of door
 try to read rfid
-if authenticates, toggle door switch and wait a bit
+if authenticates, operate door and wait a bit
 timer tick()
 }
 
