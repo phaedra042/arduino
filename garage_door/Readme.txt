@@ -1,14 +1,14 @@
 ======
-placeholder for agrage door controler with rfid control
+placeholder for garage door controller with rfid control
 
 output 1 door switch
 output 2 buzzer
 output 3 alarm
 
-output 4,5,6 satus led (used for rfid reader)
+output 4,5,6 staus led (used for rfid reader)
 
-conuter =0
-door state = 0
+counter =0 #what is counter for?
+door state = 0 # definition of door state? 0, 1, 2 ? 
 timer= 100
 transition time=100
 
@@ -24,14 +24,14 @@ check state of door
 if door open single beep
 while door open and timer>0
 	{check state of door
-    		if double input increase counter
+    		if double input increase counter #I presume that double input means neither open nor closed. Existing switches are low when open or closed.
             else counter = 0
-        timer tick()
+        timer tick() #I am mighty - what time interval is tick?
         timer--
         	if counter = 10 then increase timer by 100(real numbers later)
             if timer= 10 then beep
            } 
-if timer = 0 toggle door switch else noop
+if timer = 0 toggle door switch else noop #does toggle door switch mean "operate door motor"?
 }
 
 known state closed{
@@ -40,7 +40,7 @@ while door closed
 {
 check state of door
 try to read rfid
-if authenticaes toggle door switch and wait a bit
+if authenticates, toggle door switch and wait a bit
 timer tick()
 }
 
@@ -61,6 +61,6 @@ if transition timer=0 alarm
 
 main loop{
 known state closed()
-unknown state()
+unknown state() # should not have an unknown state - if not open or closed, then it is transitioning or stopped between open or closed.
 known state open()
 }
