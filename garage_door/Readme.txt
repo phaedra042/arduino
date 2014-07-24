@@ -7,8 +7,8 @@ output 3 alarm
 
 output 4,5,6 staus led (used for rfid reader)
 
-counter =0 #what is counter for?
-door state = 0 # definition of door state? 0, 1, 2 ? 
+counter =0 #what is counter for? primarily to see if the user has pressed the "keep the door open" button long enough 
+door state = 0 # definition of door state? 0, 1, 2,3 ? ..open,closed,no state swtches operated,both state switches operated
 timer= 100
 transition time=100
 
@@ -24,14 +24,14 @@ check state of door
 if door open single beep
 while door open and timer>0
 	{check state of door
-    		if double input increase counter #I presume that double input means neither open nor closed. Existing switches are low when open or closed.
+    		if double input increase counter. double input is both open and closed switches operated
             else counter = 0
-        timer tick() #I am mighty - what time interval is tick?
+        timer tick() #I am mighty - what time interval is tick? as yet to be decided
         timer--
-        	if counter = 10 then increase timer by 100(real numbers later)
+        	if counter = 10 then increase timer by 100(real numbers later) and  beep
             if timer= 10 then beep
            } 
-if timer = 0 toggle door switch else noop #does toggle door switch mean "operate door motor"?
+if timer = 0 toggle door switch else noop #does toggle door switch mean "operate door motor"? yep
 }
 
 known state closed{
@@ -61,6 +61,6 @@ if transition timer=0 alarm
 
 main loop{
 known state closed()
-unknown state() # should not have an unknown state - if not open or closed, then it is transitioning or stopped between open or closed.
+unknown state() # if neither switch is operated i can't say definitivly what's happening.. therefor unknown.which means wait and alarm if needed
 known state open()
 }
