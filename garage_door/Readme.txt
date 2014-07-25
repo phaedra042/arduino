@@ -7,7 +7,7 @@ output 3 alarm
 
 output 4,5,6 staus led (used for rfid reader)
 
-counter =0 #what is counter for? primarily to see if the user has pressed the "keep the door open" button long enough 
+door_open_delay =0 #what is counter for? primarily to see if the user has pressed the "keep the door open" button long enough 
 door state = 0 # definition of door state? 0, 1, 2,3 ? ..open,closed,no state swtches operated,both state switches operated
 timer= 100
 transition time=100
@@ -23,12 +23,13 @@ timer=100
 check state of door
 if door open single beep
 while door open and timer>0
-	{check state of door
-    		if double input increase counter. double input is both open and closed switches operated
-            else counter = 0
+	{alarm state off
+	check state of door
+    		if double input increase door_open_delay. double input is both open and closed switches operated
+            else door_open_delay = 0
         timer tick() #I am mighty - what time interval is tick? as yet to be decided
         timer--
-        	if counter = 10 then increase timer by 100(real numbers later) and  beep
+        	if door_open_delay = 10 then increase timer by 100(real numbers later) and  beep
             if timer= 10 then beep
            } 
 if timer = 0 operate door motor else noop
@@ -38,6 +39,7 @@ known state closed{
 check door state
 while door closed
 {
+alarm state off
 check state of door
 try to read rfid
 if authenticates, operate door and wait a bit
@@ -55,7 +57,7 @@ timer tick ()
 transition time--
 }while door state unknown(or double input) or transition timer >0
 
-if transition timer=0 alarm
+if transition timer=0 alarm state on
 }
 
 
