@@ -32,6 +32,10 @@ int debug=true;
 int authenticated = false;
 // what state do we think the bike is in
 int running = true;
+//what state do we want the bike to be in
+boolean master_switch = false;
+
+
 
 // led status globals
 //analogue output pins
@@ -62,7 +66,7 @@ display_status(status_off);
     
 
 
-void setup_inputsw(){
+void setup_iosw(){
 //setup all input switches to allow reading of the state of the bike  
 //examine state of emergancy program stop switch.
 //halt if required (safety valve to lock ignition off or allow easily programming)
@@ -87,10 +91,21 @@ int is_running_bike(){
 void arduinopower(boolean state){
   if (state == true){
     //activate arduino power relay
-  }
-//  else power off
+  }else {
+//  else power off        
+    }
+
   
 }
+
+void bikepower(boolean state){
+    if (state == true){
+        //toggle bike ignition relay on
+    } else {
+        //toggle bike ignition relay off 
+    }
+}
+
 
 void setup_rfid (void) {
 //currently magic and voodoo here.. must learn
@@ -228,12 +243,13 @@ void setup(){
 //initilises as off
 setup_ledstatus(); 
 //setup input switches
-setup_inputsw();
+setup_iosw();
 
+  //activate power relay for arduino so that on button does not need to be held  
 arduinopower(true);
 
 
-//set to fail before initilising rfid, if the initiilisation fails then it will lock up
+//set status light to fail before initilising rfid, if the initiilisation fails then it will lock up
 //otherwise this should be a barely percievable blip
 display_status(status_reader_fail);
 
@@ -243,10 +259,7 @@ setup_rfid();
 //now that the rfid is iniilised we can set the status mode to be on and start the program propper
 display_status(status_power_on);
   
-  
-//read input switches
-read_inputsw();
-//are we booting up on a running bike?
+ //are we booting up on a running bike?
 running = is_running_bike();
 
   
@@ -262,20 +275,28 @@ authenticated = authenticate_card();
   if (authenticated){
    display_status(status_reader_authenticated);
    //toggle bike ignition relay on
+   bikepower(true);
+   running=true;
   }
 }
 
 if ((running == false) && (authenticated == false)){
   //shutdown bike and arduino
+        bikepower(false);
+        arduinopower(false);
 }
 
 read_inputsw();
 //check bike state (primary switch.)
-//if primary switch is off toggle bike relay off
-//power down arduino
+
+ //if primary switch is off toggle bike relay off
+if (master_switch==false){
+        bikepower (false);
+        arduinopower(false);
+    }
+  //power down arduino
 
 
-  
-  
+   
 }
 
