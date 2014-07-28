@@ -49,12 +49,14 @@ const int status_reader_unauthenticated[3] = {255,0,0};
 
 void setup(){
 //intiitilise the status leds before anything else (they will be needed first)
+//initilises as off
 setup_ledstatus(); 
 //setup input switches
 setup_inputsw();
 
-//clear the led so we know the state
-display_status(status_off);
+arduinopower(true);
+
+
 //set to fail before initilising rfid, if the initiilisation fails then it will lock up
 //otherwise this should be a barely percievable blip
 display_status(status_reader_fail);
@@ -75,25 +77,45 @@ running = is_running_bike();
 }
 
 void setup_inputsw(){
+//setup all input switches to allow reading of the state of the bike  
+//examine state of emergancy program stop switch.
+//halt if required (safety valve to lock ignition off or allow easily programming)
+  
 }
 
 void read_inputsw(){
+//read the input switches and other bike state information
+//interact with global variables to set state information
   
 }
 int is_running_bike(){
+//read bike state information and decide whether the bike is already running
+//possible suggestions of state.. tachometer, wheels moving, speedo above 5km/hr
+
+  read_inputsw();
+//decision goes here  
   return true;
 }  
 
 void setup_ledstatus(){
+//set the output modes and intial state of the output leds
 pinMode (redledpin,OUTPUT);
 pinMode(greenledpin,OUTPUT);
 pinMode(blueledpin,OUTPUT);       
-
+display_status(status_off);
   
 }
 
+void arduinopower(boolean state){
+  if (state == true){
+    //activate arduino power relay
+  }
+//  else power off
+  
+}
 
 void setup_rfid (void) {
+//currently magic and voodoo here.. must learn
 if (debug == true) {Serial.begin(9600);
   Serial.println("Hello!");}
 
@@ -118,11 +140,13 @@ if (debug == true) {Serial.begin(9600);
 
 
 void display_status (const int status[3]){
-    
+//set status led output values here, overwrite all 3 values and don't allow for mixing
+  
 }
 
 
 void read_rfid(void) {
+ //currently magic and voodoo here.. must learn
   uint8_t success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
@@ -215,21 +239,37 @@ void read_rfid(void) {
   }
 }
 
+boolean authenticate_card(){
+  display_status(status_reader_unauthenticated);
+  //loop to read the card
+ //compare to list of known good cards (in eeprom) 
+ //seperate program to load
+ //if card is good, return true. else false
+  
+  return true;
+}
+
+
 void loop (){
 
-//if not running loop on reading a card
+if (running == false){
+//try to read a card and authenticate
+authenticated = authenticate_card();
 
-//card read - 
-//{
-  display_status(status_reader_unauthenticated);
-  //authenticate card
-  display_status(status_reader_authenticated);
-  //if authenticated toggle bike relay on
-//}
+  if (authenticated){
+   display_status(status_reader_authenticated);
+   //toggle bike ignition relay on
+  }
+}
 
-//check primary switch.
-//if off toggle bike relay off
-    //power down arduino
+if ((running == false) && (authenticated == false)){
+  //shutdown bike and arduino
+}
+
+read_inputsw();
+//check bike state (primary switch.)
+//if primary switch is off toggle bike relay off
+//power down arduino
 
 
   
