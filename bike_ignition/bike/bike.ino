@@ -46,35 +46,21 @@ const int status_reader_ready[3] = {255,0,0};
 const int status_reader_authenticated[3] = {255,0,0};
 const int status_reader_unauthenticated[3] = {255,0,0};
 
-
-void setup(){
-//intiitilise the status leds before anything else (they will be needed first)
-//initilises as off
-setup_ledstatus(); 
-//setup input switches
-setup_inputsw();
-
-arduinopower(true);
-
-
-//set to fail before initilising rfid, if the initiilisation fails then it will lock up
-//otherwise this should be a barely percievable blip
-display_status(status_reader_fail);
-
-//initilise the rfid reader, 
-setup_rfid();
-
-//now that the rfid is iniilised we can set the status mode to be on and start the program propper
-display_status(status_power_on);
-  
-  
-//read input switches
-read_inputsw();
-//are we booting up on a running bike?
-running = is_running_bike();
-
+void display_status (const int status[3]){
+//set status led output values here, overwrite all 3 values and don't allow for mixing
   
 }
+    
+void setup_ledstatus(){
+//set the output modes and intial state of the output leds
+pinMode (redledpin,OUTPUT);
+pinMode(greenledpin,OUTPUT);
+pinMode(blueledpin,OUTPUT);       
+display_status(status_off);
+  
+}
+    
+
 
 void setup_inputsw(){
 //setup all input switches to allow reading of the state of the bike  
@@ -97,14 +83,6 @@ int is_running_bike(){
   return true;
 }  
 
-void setup_ledstatus(){
-//set the output modes and intial state of the output leds
-pinMode (redledpin,OUTPUT);
-pinMode(greenledpin,OUTPUT);
-pinMode(blueledpin,OUTPUT);       
-display_status(status_off);
-  
-}
 
 void arduinopower(boolean state){
   if (state == true){
@@ -138,11 +116,6 @@ if (debug == true) {Serial.begin(9600);
 }
 
 
-
-void display_status (const int status[3]){
-//set status led output values here, overwrite all 3 values and don't allow for mixing
-  
-}
 
 
 void read_rfid(void) {
@@ -247,6 +220,36 @@ boolean authenticate_card(){
  //if card is good, return true. else false
   
   return true;
+}
+
+
+void setup(){
+//intiitilise the status leds before anything else (they will be needed first)
+//initilises as off
+setup_ledstatus(); 
+//setup input switches
+setup_inputsw();
+
+arduinopower(true);
+
+
+//set to fail before initilising rfid, if the initiilisation fails then it will lock up
+//otherwise this should be a barely percievable blip
+display_status(status_reader_fail);
+
+//initilise the rfid reader, 
+setup_rfid();
+
+//now that the rfid is iniilised we can set the status mode to be on and start the program propper
+display_status(status_power_on);
+  
+  
+//read input switches
+read_inputsw();
+//are we booting up on a running bike?
+running = is_running_bike();
+
+  
 }
 
 
