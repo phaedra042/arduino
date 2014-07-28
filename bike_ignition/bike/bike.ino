@@ -24,14 +24,14 @@
   #include <PN532_I2C.h>
   #include <PN532.h>
 
-  PN532_I2C pn532i2c(Wire);
-  PN532 nfc(pn532i2c);
+PN532_I2C pn532i2c(Wire);
+PN532 nfc(pn532i2c);
 // display console messages
-int debug=true;
+boolean debug=true;
 // do we have an authenticated card
-int authenticated = false;
+boolean authenticated = false;
 // what state do we think the bike is in
-int running = true;
+boolean running = true;
 //what state do we want the bike to be in
 boolean master_switch = false;
 
@@ -50,6 +50,18 @@ const int status_reader_ready[3] = {255,0,0};
 const int status_reader_authenticated[3] = {255,0,0};
 const int status_reader_unauthenticated[3] = {255,0,0};
 
+//input switches
+int master_switch_pin = 3; 
+int headlight_running_pin =6;
+int forward_momentum_pin = 7;
+
+//output switches
+int arduino_power_relay_pin = 4;
+int bike_ignition_on_pin = 5; 
+int bike_ignition_off_pin = 5;
+
+
+
 void display_status (const int status[3]){
 //set status led output values here, overwrite all 3 values and don't allow for mixing
   
@@ -58,8 +70,8 @@ void display_status (const int status[3]){
 void setup_ledstatus(){
 //set the output modes and intial state of the output leds
 pinMode (redledpin,OUTPUT);
-pinMode(greenledpin,OUTPUT);
-pinMode(blueledpin,OUTPUT);       
+pinMode (greenledpin,OUTPUT);
+pinMode (blueledpin,OUTPUT);       
 display_status(status_off);
   
 }
@@ -67,7 +79,7 @@ display_status(status_off);
 
 
 void setup_iosw(){
-//setup all input switches to allow reading of the state of the bike  
+//setup all input output switches to allow reading of the state of the bike  
 //examine state of emergancy program stop switch.
 //halt if required (safety valve to lock ignition off or allow easily programming)
   
@@ -267,8 +279,10 @@ running = is_running_bike();
 
 
 void loop (){
-
-if (running == false){
+//check bike state (primary switch.)
+    read_inputsw();
+    
+if ((running == false) && (master_switch==true)){
 //try to read a card and authenticate
 authenticated = authenticate_card();
 
@@ -280,23 +294,11 @@ authenticated = authenticate_card();
   }
 }
 
-if ((running == false) && (authenticated == false)){
+if ((running == false) && (authenticated == false) || (master_switch==false)){
   //shutdown bike and arduino
         bikepower(false);
         arduinopower(false);
 }
 
-read_inputsw();
-//check bike state (primary switch.)
 
- //if primary switch is off toggle bike relay off
-if (master_switch==false){
-        bikepower (false);
-        arduinopower(false);
-    }
-  //power down arduino
-
-
-   
-}
-
+ }
