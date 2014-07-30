@@ -1,0 +1,47 @@
+// Number of display elements - constant eg 1 = 2 7 segment displays.
+byte display_element = 1;
+byte current_display[display_element];
+
+
+// Define segments, an array 0~9 with 8 bits as depicted below.
+// a
+//f b
+// g
+//e c
+// d .
+// segment a~g is defined as b0~b6, b7 is decimal point
+byte display_array[] = {63,6,91,7,9,103,109,124,7,127,103,128};
+byte negative = 0;
+
+int outua = 22 #PA0
+int outub = 23 #PA1
+int outuc = 24 #PA2
+int outud = 25 #PA3
+int outue = 26 #PA4
+int outuf = 27 #PA5
+int outug = 28 #PA6
+int outu. = 29 #PA7 dummy
+
+int outut = 22 #PB0
+int outut = 23 #PB1
+int outut = 24 #PB2
+int outut = 25 #PB3
+int outut = 26 #PB4
+int outut = 27 #PB5
+int outut = 28 #PB6
+int outt. = 29 #PB7 dummy
+
+int
+
+// enter with value  display_value as a signed byte range -127 to +127. 
+if display_value > 128 # negative
+{ negative = -1;
+  bitwise display_value = not display_value;
+  display_value += 1
+  // set negative flag and ones complement
+};
+
+for
+ 
+
+
