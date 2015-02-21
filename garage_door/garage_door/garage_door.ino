@@ -35,6 +35,12 @@ int statusled = 0;
 int redledpin = 9;
 int greenledpin = 10;
 int blueledpin = 11;
+//door switches
+boolean door_open = false;
+boolean door_closed = false;
+boolean door_state_unknown = false;
+
+
 // status led constants
 const int status_off[3] = {0,0,0};
 const int status_power_on[3] = {255,0,0};
@@ -43,6 +49,8 @@ const int status_reader_ready[3] = {255,0,0};
 const int status_reader_authenticated[3] = {255,0,0};
 const int status_reader_unauthenticated[3] = {255,0,0};
 
+//door time
+const int door_operate_time = 30;
 
 void setup(){
 //intiitilise the status leds before anything else (they will be needed first)
@@ -77,6 +85,54 @@ pinMode(blueledpin,OUTPUT);
 }
 
 
+void display_status (const int status[3]){
+//set the status light to the status    
+}
+
+
+
+void loop (){
+
+  //read door status
+  //if status unknown set door_state_unknown true
+      //status light set unknown
+      //wait timer (door_operate_time)
+      //read door status
+      //if still unknown state
+        //alarm on
+  //
+  //if door is open
+      //set status light open
+      // if close attemopts < 3
+          //alarm off
+      //wait 1 time period
+      //decrement timer
+      //read door state 
+      //if open and closed
+          //increment time period by 2
+          //beep
+          //wait 1 time period
+      //if close attempts = 3
+          //alarm on
+      //if time period = 0 
+          //push door close button
+          //increment close attempts 
+      
+  //if door closed
+    //set status light off
+    //alarm off
+    //set timer to inital door open time
+    //set close attempts = 0
+    //wait time period
+    //attempt to read rfid
+    //if rfid success
+       //push open door button 
+  
+
+  
+  
+}
+
 void setup_rfid (void) {
   Serial.begin(9600);
   Serial.println("Hello!");
@@ -98,13 +154,6 @@ void setup_rfid (void) {
   
   Serial.println("Waiting for an ISO14443A Card ...");
 }
-
-
-
-void display_status (const int status[3]){
-    
-}
-
 
 void read_rfid(void) {
   uint8_t success;
@@ -197,15 +246,5 @@ void read_rfid(void) {
       }
     }
   }
-}
-
-void loop (){
-
-//if not running loop on reading a card
-
-//card read - authenticate data  
-
-  
-  
 }
 
